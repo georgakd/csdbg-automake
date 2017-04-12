@@ -1,4 +1,4 @@
-# Makefile for hello world
+# Makefile for libcsdbg
 # (c) 2017
 
 AM_CFLAGS=-Wall -g 

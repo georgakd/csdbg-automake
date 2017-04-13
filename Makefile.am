@@ -1,13 +1,22 @@
-# Makefile for hello world
+# Makefile for csdbg
 # (c) 2017
 
+#SUBDIRS = src tst
 
-
-AM_LDFLAGS=#-L/usr/local/lib 
-
-AM_CPPFLAGS=#-I/usr/local/include -I./src
-
-lib_LTLIBRARIES=libcsdbg.la
+# Library modules
+MODS                =     src/object
+MODS                +=    src/util
+MODS                +=    src/exception
+MODS                +=    src/string
+MODS                +=    src/symbol
+MODS                +=    src/call
+MODS                +=    src/node
+MODS                +=    src/chain
+MODS                +=    src/stack
+MODS                +=    src/symtab
+MODS                +=    src/thread
+MODS                +=    src/process
+MODS                +=    src/tracer
 
 # Thread safety
 DOPTS				=		_REENTRANT
@@ -57,35 +66,23 @@ GOPTS                +=    march=native
 GOPTS                +=    std=gnu++0x
 
 
-# Library modules
-MODS                =     object
-MODS                +=    util
-MODS                +=    exception
-MODS                +=    string
-MODS                +=    symbol
-MODS                +=    call
-MODS                +=    node
-MODS                +=    chain
-MODS                +=    stack
-MODS                +=    symtab
-MODS                +=    thread
-MODS                +=    process
-MODS                +=    tracer
+lib_LTLIBRARIES=libcsdbg.la
 
-libcsdbg_la_SOURCES= src/object.cpp #$(foreach o, $(MODS), src/$(o).cpp)
+libcsdbg_la_SOURCES= $(MODS:=.cpp)
 
 libcsdbg_la_LDFLAGS = -version-info 1:29:0
 
+libcsdbg_la_includedir = $(includedir)/csdbg
 
- # Compiler flag setup
+libcsdbg_la_include_HEADERS = include/*.hpp
+
+# Compiler flag setup
 AM_CXXFLAGS            =     $(foreach o, $(GOPTS), -$(o))
 AM_CXXFLAGS            +=    $(foreach w, $(WOPTS), -W$(w))
 AM_CXXFLAGS            +=    $(foreach f, $(FOPTS), -f$(f))
 AM_CXXFLAGS            +=    $(foreach d, $(DOPTS), -D$(d))
 AM_CXXFLAGS            +=    $(foreach p, $(IPATHS), -I$(p))
 
-
-
-
-
+echo:
+		@echo $(libcsdbg_la_SOURCES)
 

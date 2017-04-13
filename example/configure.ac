@@ -21,7 +21,7 @@ AC_CHECK_LIB([csdbg], [main])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stdio.h stdlib.h string.h stdarg.h ctype.h csdbg.hpp]) 
+AC_CHECK_HEADERS([stdio.h stdlib.h string.h stdarg.h ctype.h csdbg/csdbg.hpp]) 
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

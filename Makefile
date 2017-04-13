@@ -14,8 +14,11 @@
 
 
 
-# Makefile for hello world
+# Makefile for csdbg
 # (c) 2017
+
+#SUBDIRS = src tst
+
 
 
 am__is_gnu_make = { \
@@ -91,7 +94,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
-#am__append_1 = CSDBG_WITH_DEBUG
+am__append_1 = CSDBG_WITH_DEBUG
 #am__append_2 = CSDBG_WITH_COLOR_TERM
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -99,7 +102,8 @@ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(am__DIST_COMMON)
+	$(am__configure_deps) $(libcsdbg_la_include_HEADERS) \
+	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -132,11 +136,16 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(libcsdbg_la_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcsdbg_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libcsdbg_la_OBJECTS = src/object.lo
+am__objects_1 = src/object.lo src/util.lo src/exception.lo \
+	src/string.lo src/symbol.lo src/call.lo src/node.lo \
+	src/chain.lo src/stack.lo src/symtab.lo src/thread.lo \
+	src/process.lo src/tracer.lo
+am_libcsdbg_la_OBJECTS = $(am__objects_1)
 libcsdbg_la_OBJECTS = $(am_libcsdbg_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -186,6 +195,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(libcsdbg_la_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -348,9 +358,11 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-AM_LDFLAGS = #-L/usr/local/lib 
-AM_CPPFLAGS = #-I/usr/local/include -I./src
-lib_LTLIBRARIES = libcsdbg.la
+
+# Library modules
+MODS = src/object src/util src/exception src/string src/symbol \
+	src/call src/node src/chain src/stack src/symtab src/thread \
+	src/process src/tracer
 
 # Thread safety
 DOPTS = _REENTRANT $(am__append_1) $(am__append_2)
@@ -369,12 +381,13 @@ WOPTS = all abi ctor-dtor-privacy non-virtual-dtor format-security \
 
 # Generic options
 GOPTS = O2 rdynamic march=native std=gnu++0x
-
-# Library modules
-MODS = object util exception string symbol call node chain stack \
-	symtab thread process tracer
-libcsdbg_la_SOURCES = src/object.cpp #$(foreach o, $(MODS), src/$(o).cpp)
+lib_LTLIBRARIES = libcsdbg.la
+libcsdbg_la_SOURCES = $(MODS:=.cpp)
 libcsdbg_la_LDFLAGS = -version-info 1:29:0
+libcsdbg_la_includedir = $(includedir)/csdbg
+libcsdbg_la_include_HEADERS = include/*.hpp
+
+# Compiler flag setup
 AM_CXXFLAGS = $(foreach o, $(GOPTS), -$(o)) $(foreach w, $(WOPTS), \
 	-W$(w)) $(foreach f, $(FOPTS), -f$(f)) $(foreach d, $(DOPTS), \
 	-D$(d)) $(foreach p, $(IPATHS), -I$(p))
@@ -457,6 +470,18 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/object.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/util.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/exception.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/string.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/symbol.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/call.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/node.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/chain.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/stack.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/symtab.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/thread.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/process.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/tracer.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 libcsdbg.la: $(libcsdbg_la_OBJECTS) $(libcsdbg_la_DEPENDENCIES) $(EXTRA_libcsdbg_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libcsdbg_la_LINK) -rpath $(libdir) $(libcsdbg_la_OBJECTS) $(libcsdbg_la_LIBADD) $(LIBS)
@@ -469,7 +494,19 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include src/$(DEPDIR)/call.Plo
+include src/$(DEPDIR)/chain.Plo
+include src/$(DEPDIR)/exception.Plo
+include src/$(DEPDIR)/node.Plo
 include src/$(DEPDIR)/object.Plo
+include src/$(DEPDIR)/process.Plo
+include src/$(DEPDIR)/stack.Plo
+include src/$(DEPDIR)/string.Plo
+include src/$(DEPDIR)/symbol.Plo
+include src/$(DEPDIR)/symtab.Plo
+include src/$(DEPDIR)/thread.Plo
+include src/$(DEPDIR)/tracer.Plo
+include src/$(DEPDIR)/util.Plo
 
 .cpp.o:
 	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -504,6 +541,27 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
+install-libcsdbg_la_includeHEADERS: $(libcsdbg_la_include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(libcsdbg_la_include_HEADERS)'; test -n "$(libcsdbg_la_includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libcsdbg_la_includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libcsdbg_la_includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(libcsdbg_la_includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(libcsdbg_la_includedir)" || exit $$?; \
+	done
+
+uninstall-libcsdbg_la_includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(libcsdbg_la_include_HEADERS)'; test -n "$(libcsdbg_la_includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(libcsdbg_la_includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -729,9 +787,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libcsdbg_la_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -790,7 +848,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-libcsdbg_la_includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -838,7 +896,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES \
+	uninstall-libcsdbg_la_includeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -852,17 +911,20 @@ uninstall-am: uninstall-libLTLIBRARIES
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+	install-libLTLIBRARIES install-libcsdbg_la_includeHEADERS \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-libLTLIBRARIES \
+	uninstall-libcsdbg_la_includeHEADERS
 
 .PRECIOUS: Makefile
 
 
- # Compiler flag setup
+echo:
+		@echo $(libcsdbg_la_SOURCES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

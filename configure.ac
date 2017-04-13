@@ -51,12 +51,11 @@ AC_ARG_ENABLE([color-term],
 esac],[color=false])
 AM_CONDITIONAL([COLOR], [test x$color = xtrue])
 
-
-
 #with-streambuf
 #with-plugin
 #with-highlight
 #with-filter
 
 AC_CONFIG_FILES([Makefile])
+
 AC_OUTPUT

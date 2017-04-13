@@ -14,7 +14,7 @@
 
 
 
-# Makefile for hello world
+# Makefile for libcsdbg
 # (c) 2017
 
 
@@ -121,7 +121,7 @@ am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 am__v_at_1 = 
 DEFAULT_INCLUDES = -I.
-depcomp = $(SHELL) $(top_srcdir)/depcomp
+depcomp = $(SHELL) $(top_srcdir)/../depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -165,8 +165,10 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README compile depcomp install-sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/../compile \
+	$(top_srcdir)/../depcomp $(top_srcdir)/../install-sh \
+	$(top_srcdir)/../missing AUTHORS COPYING ChangeLog INSTALL \
+	NEWS README
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -184,12 +186,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/missing autoconf
-AUTOHEADER = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/missing autoheader
-AUTOMAKE = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/missing automake-1.15
+AUTOCONF = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/missing autoconf
+AUTOHEADER = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/missing autoheader
+AUTOMAKE = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -200,7 +202,7 @@ CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"hello\" -DPACKAGE_TARNAME=\"hello\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"hello\ 0.1\" -DPACKAGE_BUGREPORT=\"kalamara@users.sourceforge.net\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hello\" -DVERSION=\"0.1\" -DHAVE_LIBBFD=1 -DHAVE_LIBDL=1 -DHAVE_LIBPTHREAD=1 -DHAVE_LIBCSDBG=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDIO_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STDARG_H=1 -DHAVE_CTYPE_H=1 -DHAVE_CSDBG_HPP=1 -DHAVE_STDBOOL_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_VPRINTF=1 -DHAVE_ATEXIT=1 -DHAVE_MEMSET=1 -DHAVE_STRSTR=1
+DEFS = -DPACKAGE_NAME=\"hello\" -DPACKAGE_TARNAME=\"hello\" -DPACKAGE_VERSION=\"0.1\" -DPACKAGE_STRING=\"hello\ 0.1\" -DPACKAGE_BUGREPORT=\"kalamara@users.sourceforge.net\" -DPACKAGE_URL=\"\" -DPACKAGE=\"hello\" -DVERSION=\"0.1\" -DHAVE_LIBBFD=1 -DHAVE_LIBDL=1 -DHAVE_LIBPTHREAD=1 -DHAVE_LIBCSDBG=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDIO_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STDARG_H=1 -DHAVE_CTYPE_H=1 -DHAVE_CSDBG_CSDBG_HPP=1 -DHAVE_STDBOOL_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_VPRINTF=1 -DHAVE_ATEXIT=1 -DHAVE_MEMSET=1 -DHAVE_STRSTR=1
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
@@ -217,7 +219,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = -lcsdbg -lpthread -ldl -lbfd 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/missing makeinfo
+MAKEINFO = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = hello
@@ -232,10 +234,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 0.1
-abs_builddir = /home/antonis/libcsdbg/libcsdbg-1.28/example
-abs_srcdir = /home/antonis/libcsdbg/libcsdbg-1.28/example
-abs_top_builddir = /home/antonis/libcsdbg/libcsdbg-1.28/example
-abs_top_srcdir = /home/antonis/libcsdbg/libcsdbg-1.28/example
+abs_builddir = /home/antonis/libcsdbg/csdbg-automake/example
+abs_srcdir = /home/antonis/libcsdbg/csdbg-automake/example
+abs_top_builddir = /home/antonis/libcsdbg/csdbg-automake/example
+abs_top_srcdir = /home/antonis/libcsdbg/csdbg-automake/example
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -255,7 +257,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/antonis/libcsdbg/libcsdbg-1.28/example/install-sh
+install_sh = ${SHELL} /home/antonis/libcsdbg/csdbg-automake/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale

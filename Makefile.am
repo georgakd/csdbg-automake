@@ -9,22 +9,17 @@ AM_CPPFLAGS=#-I/usr/local/include -I./src
 
 lib_LTLIBRARIES=libcsdbg.la
 
-# Library modules
-MODS                =     object
-MODS                +=    util
-MODS                +=    exception
-MODS                +=    string
-MODS                +=    symbol
-MODS                +=    call
-MODS                +=    node
-MODS                +=    chain
-MODS                +=    stack
-MODS                +=    symtab
-MODS                +=    thread
-MODS                +=    process
-MODS                +=    tracer
+# Thread safety
+DOPTS				=		_REENTRANT
 
-libcsdbg_la_SOURCES= $(foreach o, $(MODS), src/$(o).cpp)
+if DEBUG
+DOPTS               += CSDBG_WITH_DEBUG
+endif
+
+if COLOR
+DOPTS               += CSDBG_WITH_COLOR_TERM
+endif
+
 
 # -f options
 FOPTS                =     PIC
@@ -60,6 +55,27 @@ GOPTS                =     O2
 GOPTS                +=    rdynamic
 GOPTS                +=    march=native
 GOPTS                +=    std=gnu++0x
+
+
+# Library modules
+MODS                =     object
+MODS                +=    util
+MODS                +=    exception
+MODS                +=    string
+MODS                +=    symbol
+MODS                +=    call
+MODS                +=    node
+MODS                +=    chain
+MODS                +=    stack
+MODS                +=    symtab
+MODS                +=    thread
+MODS                +=    process
+MODS                +=    tracer
+
+libcsdbg_la_SOURCES= src/object.cpp #$(foreach o, $(MODS), src/$(o).cpp)
+
+libcsdbg_la_LDFLAGS = -version-info 1:29:0
+
 
  # Compiler flag setup
 AM_CXXFLAGS            =     $(foreach o, $(GOPTS), -$(o))

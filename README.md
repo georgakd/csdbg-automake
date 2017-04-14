@@ -10,6 +10,8 @@ make
 
 sudo make install
 
+ldconfig
+
 To see available configuration options:
 ./configure --help
 
@@ -28,7 +30,7 @@ autoconf
 
 automake --add-missing
 
-This will overwrite the configure and Makefile scripts in the repository.
+This will overwrite the configure and Makefile scripts in the repository, so it is necessary for development that involves changes or additions to the project structure (eg. adding new source files).
 
 # example linkage of an application with csdbg using autotools:
 

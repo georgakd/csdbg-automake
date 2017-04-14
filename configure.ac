@@ -72,7 +72,7 @@ AM_CONDITIONAL([STREAMBUF], [test x$streambuf = xtrue])
 
 #disable-plugin
 AC_ARG_ENABLE([plugin],
-[  --disable-plugin       Instrumentation plugins],
+[  --disable-plugin        Instrumentation plugins],
 [case "${enableval}" in
   yes) plugin=true ;;
   *)  plugin=false ;;
@@ -81,7 +81,7 @@ AM_CONDITIONAL([PLUGIN], [test x$plugin = xtrue])
 
 #disable-filter
 AC_ARG_ENABLE([filter],
-[  --disable-filter       Instrumentation filters],
+[  --disable-filter        Instrumentation filters],
 [case "${enableval}" in
   yes) filter=true ;;
   *)  filter=false ;;

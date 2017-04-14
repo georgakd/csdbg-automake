@@ -21,6 +21,8 @@
 
 
 
+
+
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
     false; \
@@ -100,8 +102,8 @@ am__append_1 = CSDBG_WITH_DEBUG
 
 # Include support for color terminals (VT100)
 #am__append_2 = CSDBG_WITH_COLOR_TERM
-#am__append_3 = CSDBG_WITH_HIGHLIGHT
-#am__append_4 = src/style src/dictionary src/parser
+am__append_3 = CSDBG_WITH_HIGHLIGHT
+am__append_4 = src/style src/dictionary src/parser
 
 # Include code for buffered output streams
 am__append_5 = CSDBG_WITH_STREAMBUF \
@@ -154,7 +156,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
+	"$(DESTDIR)$(libcsdbg_ladir)" \
 	"$(DESTDIR)$(libcsdbg_la_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcsdbg_la_LIBADD =
@@ -166,8 +169,8 @@ am__libcsdbg_la_SOURCES_DIST = src/object.cpp src/util.cpp \
 	src/filebuf.cpp src/tcpsockbuf.cpp src/sttybuf.cpp \
 	src/plugin.cpp src/filter.cpp
 am__dirstamp = $(am__leading_dot)dirstamp
-#am__objects_1 = src/style.lo src/dictionary.lo \
-#	src/parser.lo
+am__objects_1 = src/style.lo src/dictionary.lo \
+	src/parser.lo
 am__objects_2 = src/streambuf.lo src/filebuf.lo \
 	src/tcpsockbuf.lo src/sttybuf.lo
 am__objects_3 = src/plugin.lo
@@ -186,6 +189,7 @@ am__v_lt_1 =
 libcsdbg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libcsdbg_la_LDFLAGS) $(LDFLAGS) -o $@
+SCRIPTS = $(bin_SCRIPTS)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -227,6 +231,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+DATA = $(libcsdbg_la_DATA)
 HEADERS = $(libcsdbg_la_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -390,6 +395,8 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
+lib_LTLIBRARIES = libcsdbg.la
+libcsdbg_la_LDFLAGS = -version-info 1:29:0
 
 # Library modules
 MODS = src/object src/util src/exception src/string src/symbol \
@@ -400,6 +407,8 @@ MODS = src/object src/util src/exception src/string src/symbol \
 # Thread safety
 DOPTS = _REENTRANT $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_5) $(am__append_7) $(am__append_9)
+bin_SCRIPTS = extra/vtcolors
+DATAFILES = extra/*.dict
 
 # -f options
 FOPTS = PIC no-enforce-eh-specs strict-aliasing
@@ -415,11 +424,11 @@ WOPTS = all abi ctor-dtor-privacy non-virtual-dtor format-security \
 
 # Generic options
 GOPTS = O2 rdynamic march=native std=gnu++0x
-lib_LTLIBRARIES = libcsdbg.la
 libcsdbg_la_SOURCES = $(MODS:=.cpp)
-libcsdbg_la_LDFLAGS = -version-info 1:29:0
 libcsdbg_la_includedir = $(includedir)/csdbg
 libcsdbg_la_include_HEADERS = include/*.hpp
+libcsdbg_la_DATA = $(DATAFILES)
+libcsdbg_ladir = $(prefix)/etc
 
 # Compiler flag setup
 AM_CXXFLAGS = $(GOPTS:%=-%) $(WOPTS:%=-W%) $(FOPTS:%=-f%) \
@@ -527,6 +536,41 @@ src/filter.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 libcsdbg.la: $(libcsdbg_la_OBJECTS) $(libcsdbg_la_DEPENDENCIES) $(EXTRA_libcsdbg_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libcsdbg_la_LINK) -rpath $(libdir) $(libcsdbg_la_OBJECTS) $(libcsdbg_la_LIBADD) $(LIBS)
+install-binSCRIPTS: $(bin_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-binSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(bindir)'; $(am__uninstall_files_from_dir)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -592,6 +636,27 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
+install-libcsdbg_laDATA: $(libcsdbg_la_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(libcsdbg_la_DATA)'; test -n "$(libcsdbg_ladir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(libcsdbg_ladir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(libcsdbg_ladir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(libcsdbg_ladir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(libcsdbg_ladir)" || exit $$?; \
+	done
+
+uninstall-libcsdbg_laDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(libcsdbg_la_DATA)'; test -n "$(libcsdbg_ladir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(libcsdbg_ladir)'; $(am__uninstall_files_from_dir)
 install-libcsdbg_la_includeHEADERS: $(libcsdbg_la_include_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(libcsdbg_la_include_HEADERS)'; test -n "$(libcsdbg_la_includedir)" || list=; \
@@ -838,9 +903,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(SCRIPTS) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libcsdbg_la_includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(libcsdbg_ladir)" "$(DESTDIR)$(libcsdbg_la_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -899,13 +964,14 @@ info: info-am
 
 info-am:
 
-install-data-am: install-libcsdbg_la_includeHEADERS
+install-data-am: install-libcsdbg_laDATA \
+	install-libcsdbg_la_includeHEADERS
 
 install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am: install-binSCRIPTS install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -947,8 +1013,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES \
-	uninstall-libcsdbg_la_includeHEADERS
+uninstall-am: uninstall-binSCRIPTS uninstall-libLTLIBRARIES \
+	uninstall-libcsdbg_laDATA uninstall-libcsdbg_la_includeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -959,21 +1025,23 @@ uninstall-am: uninstall-libLTLIBRARIES \
 	distcheck distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-libcsdbg_la_includeHEADERS \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-libLTLIBRARIES \
+	install install-am install-binSCRIPTS install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLTLIBRARIES install-libcsdbg_laDATA \
+	install-libcsdbg_la_includeHEADERS install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-binSCRIPTS \
+	uninstall-libLTLIBRARIES uninstall-libcsdbg_laDATA \
 	uninstall-libcsdbg_la_includeHEADERS
 
 .PRECIOUS: Makefile
 
 
+#for debugging the makefile
 echo:
 		@echo $(AM_CXXFLAGS)
 

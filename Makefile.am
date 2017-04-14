@@ -3,6 +3,10 @@
 
 #SUBDIRS = src tst
 
+lib_LTLIBRARIES=libcsdbg.la
+
+libcsdbg_la_LDFLAGS = -version-info 1:29:0
+
 # Library modules
 MODS                =     src/object
 MODS                +=    src/util
@@ -36,6 +40,8 @@ DOPTS               += CSDBG_WITH_HIGHLIGHT
 MODS                += src/style
 MODS                += src/dictionary
 MODS                += src/parser
+bin_SCRIPTS         = extra/vtcolors
+DATAFILES           = extra/*.dict
 endif
 
 # Include code for buffered output streams
@@ -58,6 +64,7 @@ endif
 if FILTER
 DOPTS               += CSDBG_WITH_FILTER
 MODS                += src/filter
+
 endif
 
 # -f options
@@ -95,24 +102,24 @@ GOPTS                +=    rdynamic
 GOPTS                +=    march=native
 GOPTS                +=    std=gnu++0x
 
-
-lib_LTLIBRARIES=libcsdbg.la
-
 libcsdbg_la_SOURCES= $(MODS:=.cpp)
 
-libcsdbg_la_LDFLAGS = -version-info 1:29:0
+libcsdbg_la_includedir= $(includedir)/csdbg
 
-libcsdbg_la_includedir = $(includedir)/csdbg
+libcsdbg_la_include_HEADERS= include/*.hpp
 
-libcsdbg_la_include_HEADERS = include/*.hpp
+libcsdbg_la_DATA= $(DATAFILES)
+
+libcsdbg_ladir= $(prefix)/etc
 
 # Compiler flag setup
-AM_CXXFLAGS            =     $(GOPTS:%=-%) #$(foreach o, $(GOPTS),-$(o))
+AM_CXXFLAGS            =     $(GOPTS:%=-%) 
 AM_CXXFLAGS            +=    $(WOPTS:%=-W%) 
 AM_CXXFLAGS            +=    $(FOPTS:%=-f%) 
 AM_CXXFLAGS            +=    $(DOPTS:%=-D%)
 AM_CXXFLAGS            +=    $(IPATHS:%=-I%)
 
+#for debugging the makefile
 echo:
 		@echo $(AM_CXXFLAGS)
 

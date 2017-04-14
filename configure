@@ -1444,11 +1444,11 @@ Optional Features:
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-debug         Debugging code
-  --enable-color-term     Include support for color terminals (VT100)
-  --disable-highlight    Trace C++ syntax highlighting
+  --enable-color-term=yes Include support for color terminals (VT100)
+  --enable-highlight=yes  Trace C++ syntax highlighting
   --disable-streambuf     Buffered output streams
-  --disable-plugin       Instrumentation plugins
-  --disable-filter       Instrumentation filters
+  --disable-plugin        Instrumentation plugins
+  --disable-filter        Instrumentation filters
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]

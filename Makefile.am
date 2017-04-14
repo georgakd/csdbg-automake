@@ -77,12 +77,12 @@ libcsdbg_la_includedir = $(includedir)/csdbg
 libcsdbg_la_include_HEADERS = include/*.hpp
 
 # Compiler flag setup
-AM_CXXFLAGS            =     $(foreach o, $(GOPTS), -$(o))
-AM_CXXFLAGS            +=    $(foreach w, $(WOPTS), -W$(w))
-AM_CXXFLAGS            +=    $(foreach f, $(FOPTS), -f$(f))
-AM_CXXFLAGS            +=    $(foreach d, $(DOPTS), -D$(d))
-AM_CXXFLAGS            +=    $(foreach p, $(IPATHS), -I$(p))
+AM_CXXFLAGS            =     $(GOPTS:%=-%) #$(foreach o, $(GOPTS),-$(o))
+AM_CXXFLAGS            +=    $(WOPTS:%=-W%) 
+AM_CXXFLAGS            +=    $(FOPTS:%=-f%) 
+AM_CXXFLAGS            +=    $(DOPTS:%=-D%)
+AM_CXXFLAGS            +=    $(IPATHS:%=-I%)
 
 echo:
-		@echo $(libcsdbg_la_SOURCES)
+		@echo $(AM_CXXFLAGS)
 

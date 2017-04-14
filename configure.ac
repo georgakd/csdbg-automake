@@ -35,7 +35,7 @@ AC_CHECK_FUNCS([atexit memset strstr])
 
 #enable-debug
 AC_ARG_ENABLE([debug],
-[  --disable-debug    Include debugging code],
+[  --disable-debug        Include debugging code],
 [case "${enableval}" in
   yes) debug=true ;;
   *)  debug=false ;;

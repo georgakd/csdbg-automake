@@ -388,9 +388,8 @@ libcsdbg_la_includedir = $(includedir)/csdbg
 libcsdbg_la_include_HEADERS = include/*.hpp
 
 # Compiler flag setup
-AM_CXXFLAGS = $(foreach o, $(GOPTS), -$(o)) $(foreach w, $(WOPTS), \
-	-W$(w)) $(foreach f, $(FOPTS), -f$(f)) $(foreach d, $(DOPTS), \
-	-D$(d)) $(foreach p, $(IPATHS), -I$(p))
+AM_CXXFLAGS = $(GOPTS:%=-%) $(WOPTS:%=-W%) $(FOPTS:%=-f%) \
+	$(DOPTS:%=-D%) $(IPATHS:%=-I%)
 all: all-am
 
 .SUFFIXES:
@@ -924,7 +923,7 @@ uninstall-am: uninstall-libLTLIBRARIES \
 
 
 echo:
-		@echo $(libcsdbg_la_SOURCES)
+		@echo $(AM_CXXFLAGS)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

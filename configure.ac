@@ -35,7 +35,7 @@ AC_CHECK_FUNCS([atexit memset strstr])
 
 #enable-debug
 AC_ARG_ENABLE([debug],
-[  --disable-debug        Include debugging code],
+[  --disable-debug         Debugging code],
 [case "${enableval}" in
   yes) debug=true ;;
   *)  debug=false ;;
@@ -44,17 +44,48 @@ AM_CONDITIONAL([DEBUG], [test x$debug = xtrue])
 
 #enable-color-term
 AC_ARG_ENABLE([color-term],
-[  --enable-color-term    Include support for color terminals (VT100)],
+[  --enable-color-term=yes Include support for color terminals (VT100)],
 [case "${enableval}" in
   yes) color=true ;;
   *)  color=false ;;
 esac],[color=false])
 AM_CONDITIONAL([COLOR], [test x$color = xtrue])
 
-#with-streambuf
-#with-plugin
-#with-highlight
-#with-filter
+#enable-highlight
+AC_ARG_ENABLE([highlight],
+[  --enable-highlight=yes  Trace C++ syntax highlighting],
+[case "${enableval}" in
+  yes) highlight=true ;;
+  *)  highlight=false ;;
+esac],[highlight=false])
+AM_CONDITIONAL([HIGHLIGHT], [test x$highlight = xtrue])
+
+#disable-streambuf
+AC_ARG_ENABLE([streambuf],
+[  --disable-streambuf     Buffered output streams],
+[case "${enableval}" in
+  yes) streambuf=true ;;
+  *)  streambuf=false ;;
+esac],[streambuf=true])
+AM_CONDITIONAL([STREAMBUF], [test x$streambuf = xtrue])
+
+#disable-plugin
+AC_ARG_ENABLE([plugin],
+[  --disable-plugin       Instrumentation plugins],
+[case "${enableval}" in
+  yes) plugin=true ;;
+  *)  plugin=false ;;
+esac],[plugin=true])
+AM_CONDITIONAL([PLUGIN], [test x$plugin = xtrue])
+
+#disable-filter
+AC_ARG_ENABLE([filter],
+[  --disable-filter       Instrumentation filters],
+[case "${enableval}" in
+  yes) filter=true ;;
+  *)  filter=false ;;
+esac],[filter=true])
+AM_CONDITIONAL([FILTER], [test x$filter = xtrue])
 
 AC_CONFIG_FILES([Makefile])
 

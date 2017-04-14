@@ -19,21 +19,51 @@ MODS                +=    src/process
 MODS                +=    src/tracer
 
 # Thread safety
-DOPTS				=		_REENTRANT
+DOPTS				= _REENTRANT
 
+# Include debugging code
 if DEBUG
 DOPTS               += CSDBG_WITH_DEBUG
 endif
 
+# Include support for color terminals (VT100)
 if COLOR
 DOPTS               += CSDBG_WITH_COLOR_TERM
 endif
 
+if HIGHLIGHT
+DOPTS               += CSDBG_WITH_HIGHLIGHT
+MODS                += src/style
+MODS                += src/dictionary
+MODS                += src/parser
+endif
+
+# Include code for buffered output streams
+if STREAMBUF
+DOPTS               += CSDBG_WITH_STREAMBUF
+DOPTS				+= CSDBG_WITH_STREAMBUF_FILE
+DOPTS				+= CSDBG_WITH_STREAMBUF_TCP
+DOPTS				+= CSDBG_WITH_STREAMBUF_STTY
+MODS                += src/streambuf
+MODS                += src/filebuf
+MODS                += src/tcpsockbuf
+MODS                += src/sttybuf
+endif
+
+if PLUGIN
+DOPTS               += CSDBG_WITH_PLUGIN
+MODS				+= src/plugin
+endif
+
+if FILTER
+DOPTS               += CSDBG_WITH_FILTER
+MODS                += src/filter
+endif
 
 # -f options
-FOPTS                =     PIC
-FOPTS                +=    no-enforce-eh-specs
-FOPTS                +=    strict-aliasing
+FOPTS                =  PIC
+FOPTS                += no-enforce-eh-specs
+FOPTS                += strict-aliasing
 
 # -W options
 WOPTS                =     all

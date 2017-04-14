@@ -94,8 +94,26 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
+
+# Include debugging code
 am__append_1 = CSDBG_WITH_DEBUG
+
+# Include support for color terminals (VT100)
 #am__append_2 = CSDBG_WITH_COLOR_TERM
+#am__append_3 = CSDBG_WITH_HIGHLIGHT
+#am__append_4 = src/style src/dictionary src/parser
+
+# Include code for buffered output streams
+am__append_5 = CSDBG_WITH_STREAMBUF \
+	CSDBG_WITH_STREAMBUF_FILE \
+	CSDBG_WITH_STREAMBUF_TCP \
+	CSDBG_WITH_STREAMBUF_STTY
+am__append_6 = src/streambuf src/filebuf \
+	src/tcpsockbuf src/sttybuf
+am__append_7 = CSDBG_WITH_PLUGIN
+am__append_8 = src/plugin
+am__append_9 = CSDBG_WITH_FILTER
+am__append_10 = src/filter
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -140,12 +158,26 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(libcsdbg_la_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcsdbg_la_LIBADD =
+am__libcsdbg_la_SOURCES_DIST = src/object.cpp src/util.cpp \
+	src/exception.cpp src/string.cpp src/symbol.cpp src/call.cpp \
+	src/node.cpp src/chain.cpp src/stack.cpp src/symtab.cpp \
+	src/thread.cpp src/process.cpp src/tracer.cpp src/style.cpp \
+	src/dictionary.cpp src/parser.cpp src/streambuf.cpp \
+	src/filebuf.cpp src/tcpsockbuf.cpp src/sttybuf.cpp \
+	src/plugin.cpp src/filter.cpp
 am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = src/object.lo src/util.lo src/exception.lo \
+#am__objects_1 = src/style.lo src/dictionary.lo \
+#	src/parser.lo
+am__objects_2 = src/streambuf.lo src/filebuf.lo \
+	src/tcpsockbuf.lo src/sttybuf.lo
+am__objects_3 = src/plugin.lo
+am__objects_4 = src/filter.lo
+am__objects_5 = src/object.lo src/util.lo src/exception.lo \
 	src/string.lo src/symbol.lo src/call.lo src/node.lo \
 	src/chain.lo src/stack.lo src/symtab.lo src/thread.lo \
-	src/process.lo src/tracer.lo
-am_libcsdbg_la_OBJECTS = $(am__objects_1)
+	src/process.lo src/tracer.lo $(am__objects_1) $(am__objects_2) \
+	$(am__objects_3) $(am__objects_4)
+am_libcsdbg_la_OBJECTS = $(am__objects_5)
 libcsdbg_la_OBJECTS = $(am_libcsdbg_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -189,7 +221,7 @@ am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(libcsdbg_la_SOURCES)
-DIST_SOURCES = $(libcsdbg_la_SOURCES)
+DIST_SOURCES = $(am__libcsdbg_la_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -362,10 +394,12 @@ top_srcdir = .
 # Library modules
 MODS = src/object src/util src/exception src/string src/symbol \
 	src/call src/node src/chain src/stack src/symtab src/thread \
-	src/process src/tracer
+	src/process src/tracer $(am__append_4) $(am__append_6) \
+	$(am__append_8) $(am__append_10)
 
 # Thread safety
-DOPTS = _REENTRANT $(am__append_1) $(am__append_2)
+DOPTS = _REENTRANT $(am__append_1) $(am__append_2) $(am__append_3) \
+	$(am__append_5) $(am__append_7) $(am__append_9)
 
 # -f options
 FOPTS = PIC no-enforce-eh-specs strict-aliasing
@@ -481,6 +515,15 @@ src/symtab.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/thread.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/process.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/tracer.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/style.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/dictionary.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/parser.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/streambuf.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/filebuf.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/tcpsockbuf.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/sttybuf.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/plugin.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/filter.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 libcsdbg.la: $(libcsdbg_la_OBJECTS) $(libcsdbg_la_DEPENDENCIES) $(EXTRA_libcsdbg_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libcsdbg_la_LINK) -rpath $(libdir) $(libcsdbg_la_OBJECTS) $(libcsdbg_la_LIBADD) $(LIBS)
@@ -495,14 +538,23 @@ distclean-compile:
 
 include src/$(DEPDIR)/call.Plo
 include src/$(DEPDIR)/chain.Plo
+include src/$(DEPDIR)/dictionary.Plo
 include src/$(DEPDIR)/exception.Plo
+include src/$(DEPDIR)/filebuf.Plo
+include src/$(DEPDIR)/filter.Plo
 include src/$(DEPDIR)/node.Plo
 include src/$(DEPDIR)/object.Plo
+include src/$(DEPDIR)/parser.Plo
+include src/$(DEPDIR)/plugin.Plo
 include src/$(DEPDIR)/process.Plo
 include src/$(DEPDIR)/stack.Plo
+include src/$(DEPDIR)/streambuf.Plo
 include src/$(DEPDIR)/string.Plo
+include src/$(DEPDIR)/sttybuf.Plo
+include src/$(DEPDIR)/style.Plo
 include src/$(DEPDIR)/symbol.Plo
 include src/$(DEPDIR)/symtab.Plo
+include src/$(DEPDIR)/tcpsockbuf.Plo
 include src/$(DEPDIR)/thread.Plo
 include src/$(DEPDIR)/tracer.Plo
 include src/$(DEPDIR)/util.Plo

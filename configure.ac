@@ -5,6 +5,7 @@ AC_PREREQ(2.59)
 AC_INIT([csdbg], [1.29], [kalamara@users.sourceforge.net])
 AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_SRCDIR([src])
+AC_CONFIG_MACRO_DIR([m4])
 #AC_CONFIG_HEADER([config.h])
 
 # Checks for programs.

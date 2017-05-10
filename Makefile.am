@@ -119,6 +119,12 @@ AM_CXXFLAGS            +=    $(FOPTS:%=-f%)
 AM_CXXFLAGS            +=    $(DOPTS:%=-D%)
 AM_CXXFLAGS            +=    $(IPATHS:%=-I%)
 
+# Doxygen support
+include dxinclude.am
+
+EXTRA_DIST = $(DX_CONFIG) doc/html
+
+
 #for debugging the makefile
 echo:
 		@echo $(AM_CXXFLAGS)

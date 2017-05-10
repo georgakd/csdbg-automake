@@ -120,7 +120,7 @@ AM_CXXFLAGS            +=    $(DOPTS:%=-D%)
 AM_CXXFLAGS            +=    $(IPATHS:%=-I%)
 
 # Doxygen support
-include dxinclude.am
+include $(top_srcdir)/dxinclude.am
 
 EXTRA_DIST = $(DX_CONFIG) doc/html
 

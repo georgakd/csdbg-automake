@@ -26,7 +26,7 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(libcsdbg, doxygen.cfg, doc)
+DX_INIT_DOXYGEN(libcsdbg, doxygen.cfg, doxygen)
 
 AC_LANG_CPLUSPLUS
 # Checks for libraries.

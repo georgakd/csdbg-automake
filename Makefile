@@ -19,6 +19,36 @@
 
 #SUBDIRS = src tst
 
+# Copyright (C) 2004 Oren Ben-Kiki
+# This file is distributed under the same terms as the Automake macro files.
+
+# Generate automatic documentation using Doxygen. Goals and variables values
+# are controlled by the various DX_COND_??? conditionals set by autoconf.
+#
+# The provided goals are:
+# doxygen-doc: Generate all doxygen documentation.
+# doxygen-run: Run doxygen, which will generate some of the documentation
+#              (HTML, CHM, CHI, MAN, RTF, XML) but will not do the post
+#              processing required for the rest of it (PS, PDF, and some MAN).
+# doxygen-man: Rename some doxygen generated man pages.
+# doxygen-ps: Generate doxygen PostScript documentation.
+# doxygen-pdf: Generate doxygen PDF documentation.
+#
+# Note that by default these are not integrated into the automake goals. If
+# doxygen is used to generate man pages, you can achieve this integration by
+# setting man3_MANS to the list of man pages generated and then adding the
+# dependency:
+#
+#   $(man3_MANS): doxygen-doc
+#
+# This will cause make to run doxygen and generate all the documentation.
+#
+# The following variable is intended for use in Makefile.am:
+#
+# DX_CLEANFILES = everything to clean.
+#
+# This is usually added to MOSTLYCLEANFILES.
+
 
 
 
@@ -102,8 +132,8 @@ am__append_1 = CSDBG_WITH_DEBUG
 
 # Include support for color terminals (VT100)
 #am__append_2 = CSDBG_WITH_COLOR_TERM
-am__append_3 = CSDBG_WITH_HIGHLIGHT
-am__append_4 = src/style src/dictionary src/parser
+#am__append_3 = CSDBG_WITH_HIGHLIGHT
+#am__append_4 = src/style src/dictionary src/parser
 
 # Include code for buffered output streams
 am__append_5 = CSDBG_WITH_STREAMBUF \
@@ -118,7 +148,8 @@ am__append_9 = CSDBG_WITH_FILTER
 am__append_10 = src/filter
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/dxinclude.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
@@ -169,8 +200,8 @@ am__libcsdbg_la_SOURCES_DIST = src/object.cpp src/util.cpp \
 	src/filebuf.cpp src/tcpsockbuf.cpp src/sttybuf.cpp \
 	src/plugin.cpp src/filter.cpp
 am__dirstamp = $(am__leading_dot)dirstamp
-am__objects_1 = src/style.lo src/dictionary.lo \
-	src/parser.lo
+#am__objects_1 = src/style.lo src/dictionary.lo \
+#	src/parser.lo
 am__objects_2 = src/streambuf.lo src/filebuf.lo \
 	src/tcpsockbuf.lo src/sttybuf.lo
 am__objects_3 = src/plugin.lo
@@ -254,9 +285,9 @@ ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README compile config.guess config.sub depcomp \
-	install-sh ltmain.sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/dxinclude.am \
+	AUTHORS COPYING ChangeLog INSTALL NEWS README compile \
+	config.guess config.sub depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -295,8 +326,34 @@ CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"csdbg\" -DPACKAGE_TARNAME=\"csdbg\" -DPACKAGE_VERSION=\"1.29\" -DPACKAGE_STRING=\"csdbg\ 1.29\" -DPACKAGE_BUGREPORT=\"kalamara@users.sourceforge.net\" -DPACKAGE_URL=\"\" -DPACKAGE=\"csdbg\" -DVERSION=\"1.29\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_LIBBFD=1 -DHAVE_LIBDL=1 -DHAVE_LIBPTHREAD=1 -DSTDC_HEADERS=1 -DHAVE_STDIO_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STDARG_H=1 -DHAVE_CTYPE_H=1 -DHAVE_STDBOOL_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_VPRINTF=1 -DHAVE_ATEXIT=1 -DHAVE_MEMSET=1 -DHAVE_STRSTR=1
 DEPDIR = .deps
 DLLTOOL = false
+DOXYGEN = doxygen
+DOXYGEN_PAPER_SIZE = 
 DSYMUTIL = 
 DUMPBIN = 
+DX_CONFIG = doxygen.cfg
+DX_DOCDIR = doxygen
+DX_DOT = 
+DX_DOXYGEN = /usr/bin/doxygen
+DX_DVIPS = 
+DX_EGREP = 
+DX_ENV =  SRCDIR='.' PROJECT='libcsdbg' DOCDIR='doxygen' VERSION='1.29' PERL_PATH='/usr/bin/perl' HAVE_DOT='NO' GENERATE_MAN='NO' GENERATE_RTF='NO' GENERATE_XML='NO' GENERATE_HTMLHELP='NO' GENERATE_CHI='NO' GENERATE_HTML='YES' GENERATE_LATEX='NO'
+DX_FLAG_DX_CURRENT_FEATURE = 
+DX_FLAG_chi = 0
+DX_FLAG_chm = 0
+DX_FLAG_doc = 1
+DX_FLAG_dot = 0
+DX_FLAG_html = 1
+DX_FLAG_man = 0
+DX_FLAG_pdf = 0
+DX_FLAG_ps = 0
+DX_FLAG_rtf = 0
+DX_FLAG_xml = 0
+DX_HHC = 
+DX_LATEX = 
+DX_MAKEINDEX = 
+DX_PDFLATEX = 
+DX_PERL = /usr/bin/perl
+DX_PROJECT = libcsdbg
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
@@ -407,8 +464,8 @@ MODS = src/object src/util src/exception src/string src/symbol \
 # Thread safety
 DOPTS = _REENTRANT $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_5) $(am__append_7) $(am__append_9)
-bin_SCRIPTS = extra/vtcolors
-DATAFILES = extra/*.dict
+#bin_SCRIPTS = extra/vtcolors
+#DATAFILES = extra/*.dict
 
 # -f options
 FOPTS = PIC no-enforce-eh-specs strict-aliasing
@@ -433,13 +490,40 @@ libcsdbg_ladir = $(prefix)/etc
 # Compiler flag setup
 AM_CXXFLAGS = $(GOPTS:%=-%) $(WOPTS:%=-W%) $(FOPTS:%=-f%) \
 	$(DOPTS:%=-D%) $(IPATHS:%=-I%)
+DX_CLEAN_HTML = doxygen/html
+#DX_CLEAN_CHM = doxygen/chm
+##DX_CLEAN_CHI = doxygen/csdbg.chi
+#DX_CLEAN_MAN = doxygen/man
+#DX_CLEAN_RTF = doxygen/rtf
+#DX_CLEAN_XML = doxygen/xml
+#DX_CLEAN_PS = doxygen/csdbg.ps
+#DX_PS_GOAL = doxygen-ps
+#DX_CLEAN_PDF = doxygen/csdbg.pdf
+#DX_PDF_GOAL = doxygen-pdf
+#DX_CLEAN_LATEX = doxygen/latex
+DX_CLEANFILES = \
+    doxygen/csdbg.tag \
+    -r \
+    $(DX_CLEAN_HTML) \
+    $(DX_CLEAN_CHM) \
+    $(DX_CLEAN_CHI) \
+    $(DX_CLEAN_MAN) \
+    $(DX_CLEAN_RTF) \
+    $(DX_CLEAN_XML) \
+    $(DX_CLEAN_PS) \
+    $(DX_CLEAN_PDF) \
+    $(DX_CLEAN_LATEX)
+
+
+# Doxygen support
+EXTRA_DIST = $(DX_CONFIG) doc/html
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .cpp .lo .o .obj
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/dxinclude.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -461,6 +545,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
+$(top_srcdir)/dxinclude.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -1040,6 +1125,52 @@ uninstall-am: uninstall-binSCRIPTS uninstall-libLTLIBRARIES \
 
 .PRECIOUS: Makefile
 
+
+#doxygen-ps: doxygen/csdbg.ps
+
+#doxygen/csdbg.ps: doxygen/csdbg.tag
+#	cd doxygen/latex; \
+#	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
+#	$(DX_LATEX) refman.tex; \
+#	$(MAKEINDEX_PATH) refman.idx; \
+#	$(DX_LATEX) refman.tex; \
+#	countdown=5; \
+#	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
+#	                  refman.log > /dev/null 2>&1 \
+#	   && test $$countdown -gt 0; do \
+#	    $(DX_LATEX) refman.tex; \
+#	    countdown=`expr $$countdown - 1`; \
+#	done; \
+#	$(DX_DVIPS) -o ../csdbg.ps refman.dvi
+
+#doxygen-pdf: doxygen/csdbg.pdf
+
+#doxygen/csdbg.pdf: doxygen/csdbg.tag
+#	cd doxygen/latex; \
+#	rm -f *.aux *.toc *.idx *.ind *.ilg *.log *.out; \
+#	$(DX_PDFLATEX) refman.tex; \
+#	$(DX_MAKEINDEX) refman.idx; \
+#	$(DX_PDFLATEX) refman.tex; \
+#	countdown=5; \
+#	while $(DX_EGREP) 'Rerun (LaTeX|to get cross-references right)' \
+#	                  refman.log > /dev/null 2>&1 \
+#	   && test $$countdown -gt 0; do \
+#	    $(DX_PDFLATEX) refman.tex; \
+#	    countdown=`expr $$countdown - 1`; \
+#	done; \
+#	mv refman.pdf ../csdbg.pdf
+
+.PHONY: doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
+
+.INTERMEDIATE: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
+
+doxygen-run: doxygen/csdbg.tag
+
+doxygen-doc: doxygen-run $(DX_PS_GOAL) $(DX_PDF_GOAL)
+
+doxygen/csdbg.tag: $(DX_CONFIG) $(pkginclude_HEADERS)
+	rm -rf doxygen
+	$(DX_ENV) $(DX_DOXYGEN) $(srcdir)/$(DX_CONFIG)
 
 #for debugging the makefile
 echo:

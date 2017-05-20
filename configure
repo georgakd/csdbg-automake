@@ -16126,7 +16126,7 @@ DX_PROJECT=libcsdbg
 
 DX_CONFIG=doxygen.cfg
 
-DX_DOCDIR=doc
+DX_DOCDIR=doxygen
 
 
 # Environment variables used inside doxygen.cfg:

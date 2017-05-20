@@ -10,6 +10,10 @@ sudo make install
 
 ldconfig
 
+# documentation
+make doxygen-doc will produce html docs by default under /doxygen folder.
+see ./configure --help for alternative types of docs
+
 # development
 Requirements: libtool and autotools
 
